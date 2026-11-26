@@ -1,0 +1,9 @@
+# Shared per-site settings: JSON access log to stdout (visible in
+# `fly logs`) and the AI-bot filter.
+(common) {
+	log {
+		output stdout
+		format json
+	}
+	import blockAiBots
+}

@@ -1,0 +1,5 @@
+# tumble (websages/tumble), Fly app tumble-wcyd.
+http://tumble.wcyd.org, http://tumble.mandatoryfun.dev {
+	import common
+	reverse_proxy http://tumble-wcyd.flycast
+}

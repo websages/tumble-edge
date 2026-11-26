@@ -1,0 +1,31 @@
+# Shared edge for websages apps on Fly.io.
+#
+# Fly's proxy terminates TLS (certs live on this app via `fly certs add`)
+# and forwards plain HTTP to :8080. Each site in sites/ filters traffic
+# and reverse-proxies to a private backend app over Flycast.
+{
+	auto_https off
+	http_port 8080
+	admin off
+
+	servers {
+		# Fly's proxy connects from private (6PN) addresses; trust it so
+		# the real client IP is used for matching, logs and X-Forwarded-For.
+		trusted_proxies static private_ranges
+		client_ip_headers Fly-Client-IP
+	}
+}
+
+import snippets/*.caddy
+import sites/*.caddy
+
+# Health check and catch-all. Unknown hostnames get a 404 rather than
+# reaching any backend.
+:8080 {
+	handle /healthz {
+		respond "ok" 200
+	}
+	handle {
+		respond 404
+	}
+}
